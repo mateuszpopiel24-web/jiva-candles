@@ -1,15 +1,9 @@
 // data/products.ts
 
-import type { Product } from "@/components/ProductCard";
+// Typ produkty wyliczamy z tablicy na dole – bez importów z komponentów.
+export type ProductFromData = (typeof products)[number];
 
-export type ProductDetail = Product & {
-  images: string[];
-  scents: string[];
-  burnTime: number;
-  description: string;
-};
-
-const products: ProductDetail[] = [
+const products = [
   {
     id: "morning-ritual",
     slug: "jiva-morning-ritual",
@@ -23,6 +17,8 @@ const products: ProductDetail[] = [
     scentLabel: "Cytrusy, białe kwiaty, świeża herbata",
     colorLabel: "Ciepły krem z pudrowym różem",
     colorSwatches: ["#FDF3E7", "#F6D7D2"],
+
+    // pola używane na stronie produktu:
     images: ["/images/jiva-morning.jpg"],
     scents: ["Cytrusy", "Białe kwiaty", "Świeża herbata"],
     burnTime: 40,
@@ -42,6 +38,7 @@ const products: ProductDetail[] = [
     scentLabel: "Lawenda, drzewo sandałowe, wanilia",
     colorLabel: "Przygaszony liliowy z ciepłym beżem",
     colorSwatches: ["#E7DDF1", "#F4E6D6"],
+
     images: ["/images/jiva-evening.jpg"],
     scents: ["Lawenda", "Drzewo sandałowe", "Wanilia"],
     burnTime: 45,
@@ -61,6 +58,7 @@ const products: ProductDetail[] = [
     scentLabel: "Pomarańcza, cynamon, świerk",
     colorLabel: "Głęboka zieleń z rozgrzewającą czerwienią",
     colorSwatches: ["#254233", "#C8483A"],
+
     images: ["/images/jiva-winter.jpg"],
     scents: ["Pomarańcza", "Cynamon", "Świerk"],
     burnTime: 40,
@@ -80,12 +78,13 @@ const products: ProductDetail[] = [
     scentLabel: "Mieszanka nut z kolekcji JIVA",
     colorLabel: "Pastelowa mieszanka kolorów kolekcji",
     colorSwatches: ["#F6D7D2", "#C6D6C2", "#F3E1B5"],
+
     images: ["/images/jiva-ritual.jpg"],
     scents: ["Poranny rytuał", "Wieczorne wyciszenie", "Domowe spa"],
     burnTime: 60,
     description:
       "Zestaw trzech mini świec, które pozwalają przetestować różne rytuały JIVA albo podarować komuś czas tylko dla siebie. W pudełku znajduje się krótka karta z propozycjami rytuałów i wskazówkami, jak korzystać ze świec w bezpieczny sposób.",
   },
-];
+] as const;
 
 export default products;
