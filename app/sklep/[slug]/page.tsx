@@ -6,7 +6,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const product = products.find(p => p.slug === params.slug);
 
   if (!product) return notFound();
-
+  
   return (
     <main className="max-w-6xl mx-auto px-4 py-16">
       {/* GRID: zdjęcia + panel */}
