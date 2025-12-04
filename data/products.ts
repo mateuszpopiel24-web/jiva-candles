@@ -1,8 +1,5 @@
 // data/products.ts
 
-// Typ produkty wyliczamy z tablicy na dole – bez importów z komponentów.
-export type ProductFromData = (typeof products)[number];
-
 const products = [
   {
     id: "morning-ritual",
@@ -18,7 +15,7 @@ const products = [
     colorLabel: "Ciepły krem z pudrowym różem",
     colorSwatches: ["#FDF3E7", "#F6D7D2"],
 
-    // pola używane na stronie produktu:
+    // pola używane na stronie produktu
     images: ["/images/jiva-morning.jpg"],
     scents: ["Cytrusy", "Białe kwiaty", "Świeża herbata"],
     burnTime: 40,
