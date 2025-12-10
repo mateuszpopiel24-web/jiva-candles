@@ -1,7 +1,7 @@
 name: Test Color Change PR
 
 on:
-  workflow_dispatch: # uruchamiany ręcznie z poziomu GitHub Actions
+  workflow_dispatch: # ręczne uruchomienie z GitHub Actions
 
 jobs:
   create-test-pr:
@@ -17,33 +17,52 @@ jobs:
           git config user.name "ChatGPT Codex Bot"
           git config user.email "bot@openai.com"
 
-      - name: Create new branch
+      - name: Prepare branch
         run: |
-          git checkout -b feature/test-color-change
+          BRANCH="feature/test-color-change"
+          if git show-ref --verify --quiet refs/heads/$BRANCH; then
+            echo "🔁 Branch $BRANCH already exists. Switching..."
+            git checkout $BRANCH
+          else
+            echo "✨ Creating new branch $BRANCH..."
+            git checkout -b $BRANCH
+          fi
 
       - name: Modify landing page background color
         run: |
           FILE="app/page.tsx"
+          if [ ! -f "$FILE" ]; then
+            echo "❌ File $FILE not found!"
+            exit 1
+          fi
+
+          echo "🔍 Checking for existing background color..."
           if grep -q "bg-[#faf7f3]" "$FILE"; then
             sed -i 's/bg-[#faf7f3]/bg-[#f4ede4]/g' "$FILE"
-            echo "✅ Background color updated in $FILE"
+            echo "✅ Color updated (faf7f3 → f4ede4)"
           else
-            echo "⚠️ No matching color found, skipping replacement."
+            echo "⚠️ Color not found or already updated. Skipping replacement."
           fi
 
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git add app/page.tsx
+          git add app/page.tsx || true
           git commit -m "test: change background color of landing page" || echo "No changes to commit"
-          git push origin feature/test-color-change
+          git push origin feature/test-color-change --force
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Test: change background color of landing page"
-          body: "Testowa zmiana koloru tła strony głównej w celu potwierdzenia połączenia GitHub API."
+          body: |
+            ✅ Automatyczna testowa zmiana koloru tła strony głównej (`bg-[#faf7f3]` → `bg-[#f4ede4]`)
+
+            Utworzono przez GitHub Actions w celu potwierdzenia poprawnego połączenia ChatGPT Codex Connector.
           branch: feature/test-color-change
           base: main
+          labels: |
+            automation
+            chatgpt
