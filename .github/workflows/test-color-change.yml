@@ -1,30 +1,46 @@
 name: Test Color Change PR
 
 on:
-  workflow_dispatch: # ręczne uruchomienie z GitHub Actions
+  workflow_dispatch:
 
 jobs:
   create-test-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Git
+      - name: Set up Git identity
         run: |
           git config user.name "ChatGPT Codex Bot"
           git config user.email "bot@openai.com"
 
-      - name: Prepare branch
+      - name: Clean up old local branch if exists
         run: |
           BRANCH="feature/test-color-change"
           if git show-ref --verify --quiet refs/heads/$BRANCH; then
-            echo "🔁 Branch $BRANCH already exists. Switching..."
-            git checkout $BRANCH
+            echo "🧹 Local branch $BRANCH exists — deleting..."
+            git branch -D $BRANCH
+          fi
+
+      - name: Fetch remote branches
+        run: git fetch origin +refs/heads/*:refs/remotes/origin/*
+
+      - name: Create or reset feature branch
+        run: |
+          BRANCH="feature/test-color-change"
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            echo "🔁 Remote branch $BRANCH exists — resetting to latest main"
+            git checkout main
+            git pull origin main
+            git checkout -b $BRANCH origin/$BRANCH || git checkout $BRANCH
+            git reset --hard origin/main
           else
-            echo "✨ Creating new branch $BRANCH..."
+            echo "✨ Creating new branch $BRANCH from main"
+            git checkout main
+            git pull origin main
             git checkout -b $BRANCH
           fi
 
@@ -36,20 +52,15 @@ jobs:
             exit 1
           fi
 
-          echo "🔍 Checking for existing background color..."
-          if grep -q "bg-[#faf7f3]" "$FILE"; then
-            sed -i 's/bg-[#faf7f3]/bg-[#f4ede4]/g' "$FILE"
-            echo "✅ Color updated (faf7f3 → f4ede4)"
-          else
-            echo "⚠️ Color not found or already updated. Skipping replacement."
-          fi
+          echo "🎨 Replacing background color..."
+          sed -i 's/bg-[#faf7f3]/bg-[#f4ede4]/g' "$FILE" || true
 
-      - name: Commit and push changes
+      - name: Commit and push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git add app/page.tsx || true
-          git commit -m "test: change background color of landing page" || echo "No changes to commit"
+          git add app/page.tsx
+          git commit -m "test: change background color of landing page" || echo "No new changes"
           git push origin feature/test-color-change --force
 
       - name: Create Pull Request
@@ -60,7 +71,7 @@ jobs:
           body: |
             ✅ Automatyczna testowa zmiana koloru tła strony głównej (`bg-[#faf7f3]` → `bg-[#f4ede4]`)
 
-            Utworzono przez GitHub Actions w celu potwierdzenia poprawnego połączenia ChatGPT Codex Connector.
+            Utworzono automatycznie przez ChatGPT Codex Connector w celu potwierdzenia integracji.
           branch: feature/test-color-change
           base: main
           labels: |
