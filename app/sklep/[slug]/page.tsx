@@ -8,7 +8,7 @@ interface PageProps {
   };
 }
 
-export default async function ProductPage({ params }: PageProps) {
+export default async function ProductPage({ params }: { params: { slug: string } }) {
   const product = products.find((p) => p.slug === params.slug);
 
   if (!product) {
