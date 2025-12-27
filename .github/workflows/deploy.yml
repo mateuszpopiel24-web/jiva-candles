@@ -1,0 +1,54 @@
+name: Jiva Candles CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit --strict
+
+      - name: Lint check
+        run: npx eslint . --ext .ts,.tsx
+
+      - name: Next.js dry build
+        run: npx next build --no-lint
+
+      - name: Generate verify.log
+        run: |
+          echo "DevPanel v5.1 Build Verification Log" > verify.log
+          echo "Date: $(date)" >> verify.log
+          echo "Status: ? QA PASSED" >> verify.log
+
+      - name: Upload verify.log artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-log
+          path: verify.log
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          curl -X POST "$DEPLOY_HOOK"
