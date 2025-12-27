@@ -1,11 +1,12 @@
-import products from "@/data/products";
-import { notFound } from "next/navigation";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Metadata } from "next";
+import { products } from "@/data/products";
 import ProductDetails from "@/components/ProductDetails";
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
+export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const product = products.find((p) => p.slug === params.slug);
+  if (!product) return <div>Produkt nie znaleziony</div>;
+  return <ProductDetails product={product} />;
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
