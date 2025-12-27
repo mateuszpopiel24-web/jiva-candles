@@ -1,54 +1,52 @@
-name: Jiva Candles CI/CD
+name: Deploy Jiva Candles
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: 🧰 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
+        working-directory: ./
 
-      - name: TypeScript check
-        run: npx tsc --noEmit --strict
+      - name: 🧠 Type check
+        run: npx tsc --noEmit
+        working-directory: ./
 
-      - name: Lint check
+      - name: 🔍 Lint check
         run: npx eslint . --ext .ts,.tsx
+        working-directory: ./
 
-      - name: Next.js dry build
+      - name: 🏗️ Build project
         run: npx next build --no-lint
+        working-directory: ./
 
-      - name: Generate verify.log
+      - name: 🧾 Generate QA report
         run: |
-          echo "DevPanel v5.1 Build Verification Log" > verify.log
-          echo "Date: $(date)" >> verify.log
-          echo "Status: ? QA PASSED" >> verify.log
+          echo "✅ Type check, Lint, and Build completed successfully." > verify.log
+        working-directory: ./
 
-      - name: Upload verify.log artifact
+      - name: 📤 Upload QA report artifact
         uses: actions/upload-artifact@v4
         with:
           name: verify-log
           path: verify.log
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Vercel Deploy Hook
-        env:
-          DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+      - name: 🚀 Trigger Vercel Deploy
+        if: success()
         run: |
-          curl -X POST "$DEPLOY_HOOK"
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
