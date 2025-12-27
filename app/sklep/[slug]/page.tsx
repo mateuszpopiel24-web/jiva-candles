@@ -20,14 +20,14 @@ export default async function ProductPage({ params }: PageProps) {
       <ProductDetails product={product} />
 
       <section className="mt-16 max-w-3xl">
-        <h2 className="text-3xl font-playfair mb-5">O úwiecy</h2>
+        <h2 className="text-3xl font-playfair mb-5">O ≈õwiecy</h2>
         <p className="text-[#3C2A1E]/70 leading-relaxed whitespace-pre-line">
           {product.description}
         </p>
       </section>
 
       <section className="mt-16">
-        <h2 className="text-3xl font-playfair mb-5">Rytua≥</h2>
+        <h2 className="text-3xl font-playfair mb-5">Rytua≈Ç</h2>
         <ol className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {product.ritualSteps.map((step, idx) => (
             <li
