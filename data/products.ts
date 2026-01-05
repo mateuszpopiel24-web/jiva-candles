@@ -1,87 +1,202 @@
 // data/products.ts
 
-const products = [
+export type ProductBadge = "NOWOŚĆ" | "BESTSELLER" | "LIMITOWANA EDYCJA";
+
+export type RitualKey =
+  | "poranny-spokoj"
+  | "wieczorne-wyciszenie"
+  | "domowe-spa"
+  | "swieta-sezonowe";
+
+export type ScentOption = {
+  id: string;
+  name: string;
+  notes: string; // krótkie nuty zapachowe
+  story: string; // 1-2 zdania storytelling
+};
+
+export type ColorOption = {
+  id: string;
+  name: string;
+  hex: string;
+  story: string; // opis/znaczenie koloru
+};
+
+export type Product = {
+  id: string;
+  slug: string;
+  name: string;
+  shortDescription: string;
+  price: number;
+  image: string;
+
+  badge?: ProductBadge;
+  ritual: RitualKey;
+
+  // do listy /sklep (ma być czytelnie na kafelku)
+  scentLabel?: string;
+  colorLabel?: string;
+  colorSwatches?: string[];
+
+  // do strony produktu
+  images: string[];
+  description: string;
+  ritualSteps: string[];
+
+  scents: ScentOption[];
+  colors: ColorOption[];
+};
+
+const DEFAULT_SCENTS: ScentOption[] = [
+  {
+    id: "morning-citrus",
+    name: "Morning Citrus",
+    notes: "cytrusy • białe kwiaty",
+    story: "Lekki start dnia. Klarowna głowa i miękki oddech.",
+  },
+  {
+    id: "forest-calm",
+    name: "Forest Calm",
+    notes: "sosna • cedr • mech",
+    story: "Spokój jak spacer w lesie. Uziemienie i cisza w środku.",
+  },
+  {
+    id: "vanilla-ritual",
+    name: "Vanilla Ritual",
+    notes: "wanilia • tonka • bursztyn",
+    story: "Ciepło, domowo i bez pośpiechu. Rytuał wieczornego otulenia.",
+  },
+  {
+    id: "unscented",
+    name: "Bezzapachowa",
+    notes: "czysta soja",
+    story: "Dla wrażliwych. Tylko światło, bez nut zapachowych.",
+  },
+];
+
+const DEFAULT_COLORS: ColorOption[] = [
+  {
+    id: "natural",
+    name: "Naturalny",
+    hex: "#F5E9D6",
+    story: "Czystość i prostota. Światło w najspokojniejszej formie.",
+  },
+  {
+    id: "beige",
+    name: "Beżowy",
+    hex: "#DCC7A1",
+    story: "Miękkość, ciepło, codzienna równowaga.",
+  },
+  {
+    id: "warm-brown",
+    name: "Ciepły brąz",
+    hex: "#8A5A3C",
+    story: "Uziemienie i stabilność. Kolor spokojnego „tu i teraz”.",
+  },
+  {
+    id: "pine-green",
+    name: "Sosnowy zielony",
+    hex: "#2F5D50",
+    story: "Leśna energia. Oddech, przestrzeń, regeneracja.",
+  },
+];
+
+const products: Product[] = [
   {
     id: "morning-ritual",
     slug: "jiva-morning-ritual",
     name: "JIVA Morning Ritual",
     shortDescription:
-      "Sojowa świeca z nutą cytrusów i białych kwiatów na dobry początek dnia.",
+      "Sojowa świeca tworzona z intencją – lekka, jasna energia na dobry początek dnia.",
     price: 79,
     image: "/images/jiva-morning.jpg",
+    images: ["/images/jiva-morning.jpg", "/images/jiva-ritual.jpg", "/images/jiva-evening.jpg"],
     badge: "BESTSELLER",
     ritual: "poranny-spokoj",
-    scentLabel: "Cytrusy, białe kwiaty, świeża herbata",
-    colorLabel: "Ciepły krem z pudrowym różem",
-    colorSwatches: ["#FDF3E7", "#F6D7D2"],
-
-    // pola używane na stronie produktu
-    images: ["/images/jiva-morning.jpg"],
-    scents: ["Cytrusy", "Białe kwiaty", "Świeża herbata"],
-    burnTime: 40,
+    scentLabel: "cytrusy, białe kwiaty",
+    colorLabel: "krem + ciepłe beże",
+    colorSwatches: ["#F5E9D6", "#DCC7A1"],
     description:
-      "Delikatny rytuał na dobry początek dnia. Zapal świecę przy porannej kawie, planowaniu dnia albo krótkiej praktyce wdzięczności. Kompozycja cytrusów i białych kwiatów delikatnie pobudza, ale nie przytłacza, więc sprawdzi się także w pracy lub domowym biurze.",
+      "JIVA Morning Ritual to świeca, która wprowadza spokój bez spowalniania. Zapalasz ją, gdy chcesz zacząć dzień miękko i świadomie.\n\nNaturalny wosk sojowy, czyste palenie i forma, która pasuje do codziennych rytuałów – kawy, journalingu, planowania dnia.",
+    ritualSteps: [
+      "Zapal świecę i weź 3 spokojne oddechy.",
+      "Zapisz jedną intencję na dziś (jedno zdanie).",
+      "Zrób pierwszy mały krok – bez pośpiechu.",
+    ],
+    scents: DEFAULT_SCENTS,
+    colors: DEFAULT_COLORS,
   },
   {
     id: "evening-calm",
     slug: "jiva-evening-calm",
     name: "JIVA Evening Calm",
     shortDescription:
-      "Lawendowa świeca z nutą drzewa sandałowego do wieczornego wyciszenia.",
+      "Wieczorna świeca do wyciszenia – ciepło, oddech i miękkie domowe światło.",
     price: 79,
     image: "/images/jiva-evening.jpg",
+    images: ["/images/jiva-evening.jpg", "/images/jiva-ritual.jpg", "/images/jiva-morning.jpg"],
     badge: "NOWOŚĆ",
     ritual: "wieczorne-wyciszenie",
-    scentLabel: "Lawenda, drzewo sandałowe, wanilia",
-    colorLabel: "Przygaszony liliowy z ciepłym beżem",
-    colorSwatches: ["#E7DDF1", "#F4E6D6"],
-
-    images: ["/images/jiva-evening.jpg"],
-    scents: ["Lawenda", "Drzewo sandałowe", "Wanilia"],
-    burnTime: 45,
+    scentLabel: "wanilia, tonka, bursztyn",
+    colorLabel: "krem + ciepły brąz",
+    colorSwatches: ["#F5E9D6", "#8A5A3C"],
     description:
-      "Wieczorny rytuał pomagający odciąć się od dnia. Idealna do kąpieli, czytania książki lub spokojnej jogi. Lawenda i drzewo sandałowe wyciszają układ nerwowy, a wanilia dodaje poczucia ciepła i bezpieczeństwa.",
+      "JIVA Evening Calm powstała po to, żeby dom miał swój wieczorny znak: „już możesz odpuścić”. To świeca do rytuałów ciszy, kąpieli, czytania i powrotu do siebie.",
+    ritualSteps: [
+      "Przygaś światło i zapal świecę.",
+      "Zrób 60 sekund ciszy (bez telefonu).",
+      "Zamknij dzień jedną myślą wdzięczności.",
+    ],
+    scents: DEFAULT_SCENTS,
+    colors: DEFAULT_COLORS,
   },
   {
     id: "winter-magic",
     slug: "jiva-winter-magic",
     name: "JIVA Winter Magic",
     shortDescription:
-      "Zimowa świeca z nutą pomarańczy, goździków i świerku – domowa magia świąt.",
+      "Zimowa kolekcja – domowa magia świąt i spokojne światło na długie wieczory.",
     price: 79,
     image: "/images/jiva-winter.jpg",
+    images: ["/images/jiva-winter.jpg", "/images/jiva-ritual.jpg", "/images/jiva-evening.jpg"],
     badge: "LIMITOWANA EDYCJA",
     ritual: "swieta-sezonowe",
-    scentLabel: "Pomarańcza, cynamon, świerk",
-    colorLabel: "Głęboka zieleń z rozgrzewającą czerwienią",
-    colorSwatches: ["#254233", "#C8483A"],
-
-    images: ["/images/jiva-winter.jpg"],
-    scents: ["Pomarańcza", "Cynamon", "Świerk"],
-    burnTime: 40,
+    scentLabel: "pomarańcza, przyprawy, las",
+    colorLabel: "sosnowa zieleń + ciepłe beże",
+    colorSwatches: ["#2F5D50", "#DCC7A1"],
     description:
-      "Limitowany zapach przywołujący klimat zimowych wieczorów: mandarynki, przyprawy korzenne i świerkowe gałązki. Dobra do rodzinnych kolacji, świątecznych przygotowań i spokojnych wieczorów z filmem.",
+      "JIVA Winter Magic to świeca, która robi klimat bez przesady. Ma być ciepło, spokojnie i trochę nostalgicznie – jak wieczór z herbatą i kocem.",
+    ritualSteps: [
+      "Zapal świecę i przygotuj ciepły napój.",
+      "Ustaw jedno małe „zimowe” postanowienie (realne!).",
+      "Zrób 10 minut czegoś, co Cię koi.",
+    ],
+    scents: DEFAULT_SCENTS,
+    colors: DEFAULT_COLORS,
   },
   {
     id: "gift-set",
     slug: "zestaw-prezentowy-jiva",
     name: "Zestaw prezentowy JIVA",
     shortDescription:
-      "Trzy mini rytuały w jednym pudełku – idealny prezent dla kogoś, kto potrzebuje chwili dla siebie.",
+      "Zestaw prezentowy: świeca + rytuał – gotowy prezent z uważnością.",
     price: 159,
     image: "/images/jiva-ritual.jpg",
-    badge: "BESTSELLER",
+    images: ["/images/jiva-ritual.jpg", "/images/jiva-morning.jpg", "/images/jiva-evening.jpg"],
     ritual: "domowe-spa",
-    scentLabel: "Mieszanka nut z kolekcji JIVA",
-    colorLabel: "Pastelowa mieszanka kolorów kolekcji",
-    colorSwatches: ["#F6D7D2", "#C6D6C2", "#F3E1B5"],
-
-    images: ["/images/jiva-ritual.jpg"],
-    scents: ["Poranny rytuał", "Wieczorne wyciszenie", "Domowe spa"],
-    burnTime: 60,
+    scentLabel: "wybierz zapach w wariantach",
+    colorLabel: "wybierz kolor w wariantach",
+    colorSwatches: ["#F5E9D6", "#DCC7A1", "#8A5A3C", "#2F5D50"],
     description:
-      "Zestaw trzech mini świec, które pozwalają przetestować różne rytuały JIVA albo podarować komuś czas tylko dla siebie. W pudełku znajduje się krótka karta z propozycjami rytuałów i wskazówkami, jak korzystać ze świec w bezpieczny sposób.",
+      "Zestaw prezentowy JIVA to prosty sposób, żeby podarować komuś (albo sobie) mały rytuał spokoju. Wybierasz zapach i kolor – a my domykamy to w estetyczną formę.",
+    ritualSteps: [
+      "Otwórz pudełko powoli – jakbyś otwierał/a intencję.",
+      "Zapal świecę i przeczytaj krótki manifest rytuału.",
+      "Ustal jedną rzecz, którą chcesz wnieść w kolejny tydzień.",
+    ],
+    scents: DEFAULT_SCENTS,
+    colors: DEFAULT_COLORS,
   },
-] as const;
+];
 
 export default products;

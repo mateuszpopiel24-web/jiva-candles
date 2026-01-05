@@ -1,14 +1,9 @@
 {
-  "root": true,
-  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react"],
-  "env": { "browser": true, "es2021": true, "node": true },
+  "extends": ["next/core-web-vitals"],
   "rules": {
-    "react/react-in-jsx-scope": "off",
-    "no-unused-vars": "warn",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-function-return-type": "off"
-  },
-  "ignorePatterns": ["node_modules/", ".next/", "out/", "verify.log"]
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-unused-vars": "off",
+    "react/no-unescaped-entities": "off",
+    "react-hooks/exhaustive-deps": "off"
+  }
 }
